@@ -9,11 +9,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import moe.tlaster.precompose.PreComposeApp
 
 @Composable
-@Preview
 fun App() {
     PreComposeApp {
         AppTheme {
-
+            Text("Hello!Esteban")
         }
     }
 }
