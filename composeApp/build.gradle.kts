@@ -37,6 +37,7 @@ kotlin {
             // Ojo con la palabra reservada api y dependency y sus diferencias
             api(compose.foundation)
             api(compose.material)
+            api(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)

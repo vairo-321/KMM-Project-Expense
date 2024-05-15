@@ -7,12 +7,13 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import moe.tlaster.precompose.PreComposeApp
+import ui.ExpensesScreen
 
 @Composable
 fun App() {
     PreComposeApp {
         AppTheme {
-            Text("Hello!Esteban")
+            ExpensesScreen()
         }
     }
 }
