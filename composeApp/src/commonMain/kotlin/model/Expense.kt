@@ -26,5 +26,5 @@ enum class ExpenseCategory(val icon: ImageVector) {
     COFFEE( Icons.Default.Coffee ),
     CAR( Icons.Default.ElectricCar ),
     HOUSE( Icons.Default.House ),
-    OTHER( Icons.Default.ViewCozy )
+    OTHER( Icons.Default.ViewCozy ),
 }

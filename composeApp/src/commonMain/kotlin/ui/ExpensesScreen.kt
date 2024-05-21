@@ -32,12 +32,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.ExpenseManager
 import getColorsTheme
 import model.Expense
+import presentation.ExpensesUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExpensesScreen() {
+fun ExpensesScreen(uiState: ExpensesUiState) {
 
     val colors = getColorsTheme()
 
@@ -47,12 +49,14 @@ fun ExpensesScreen() {
     ) {
         stickyHeader {
             Column(modifier = Modifier.background(colors.backgroundColor)) {
-                ExpenseTotalHeader(total = 1000.0)
+                ExpenseTotalHeader(uiState.total)
                 AllExpensesHeader()
             }
         }
-        items(emptyList<String>()) {
-            //Composables for each item
+        items(uiState.expenses) { expense ->
+            ExpensesItem(expense = expense) { expense ->
+                //TODO
+            }
         }
     }
 }
@@ -122,6 +126,7 @@ fun ExpensesItem(expense: Expense, onExpenseClick: (expense: Expense) -> Unit){
 
     val colors = getColorsTheme()
 
+    //Card is container for each Row
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp).clickable {
             onExpenseClick(expense)
@@ -129,6 +134,7 @@ fun ExpensesItem(expense: Expense, onExpenseClick: (expense: Expense) -> Unit){
         shape = RoundedCornerShape(30),
         backgroundColor = colors.colorExpenseItem,
     ){
+        //Fila de cada detalle de expensa item, cada una de esta fila ira en la List<Row>
         Row(
             modifier = Modifier.padding(horizontal = 8.dp ,vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
