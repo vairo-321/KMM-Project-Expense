@@ -1,5 +1,6 @@
 package previews
 
+import App
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -11,6 +12,12 @@ import presentation.ExpensesUiState
 import ui.*
 
 
+@Preview(showBackground = true)
+@Composable
+fun AppPreview() {
+    App()
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -18,7 +25,7 @@ fun ExpenseScreenPreview() {
     ExpensesScreen(uiState = ExpensesUiState(
         expenses = ExpenseManager.fakeExpenseList,
         total = ExpenseManager.fakeExpenseList.sumOf { it.amount },
-    ))
+    ), onExpenseClick = { })
 }
 
 

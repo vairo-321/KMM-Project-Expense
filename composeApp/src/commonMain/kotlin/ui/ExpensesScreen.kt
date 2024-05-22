@@ -39,7 +39,7 @@ import presentation.ExpensesUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExpensesScreen(uiState: ExpensesUiState) {
+fun ExpensesScreen(uiState: ExpensesUiState, onExpenseClick: (expense: Expense) -> Unit) {
 
     val colors = getColorsTheme()
 
@@ -54,9 +54,7 @@ fun ExpensesScreen(uiState: ExpensesUiState) {
             }
         }
         items(uiState.expenses) { expense ->
-            ExpensesItem(expense = expense) { expense ->
-                //TODO
-            }
+            ExpensesItem(expense = expense, onExpenseClick = onExpenseClick)
         }
     }
 }
