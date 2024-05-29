@@ -13,6 +13,7 @@ import moe.tlaster.precompose.navigation.Navigator
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.viewmodel.viewModel
 import presentation.ExpensesViewModel
+import ui.ExpensesDetailScreen
 import ui.ExpensesScreen
 
 @Composable
@@ -33,15 +34,24 @@ fun Navigation(navigator: Navigator) {
         scene("/home"){
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             ExpensesScreen(uiState){ expense ->
-                navigator.navigate("/addExpense/${expense.id}")
+                navigator.navigate("/addExpenses/${expense.id}")
             }
         }
 
-        scene(route = "/addExpenses/{id}"){ backStackEntry ->
+        scene(route = "/addExpenses/{id}?"){ backStackEntry ->
             val id = backStackEntry.path<Long>("id")
-            val isAddExpense = id?.let {  viewModel.getExpenseById(id) }
+            val expenseToEditOrAdd = id?.let {  viewModel.getExpenseById(id) }
 
-            //Expense Detail
+            ExpensesDetailScreen(expenseToEdit = expenseToEditOrAdd, categories = viewModel.getCategories()){ expense ->
+
+                if (expenseToEditOrAdd == null) {
+                    viewModel.addExpense(expense)
+                }
+                else {
+                    viewModel.editExpense(expense)
+                }
+                navigator.popBackStack()
+            }
 
         }
 
