@@ -122,3 +122,4 @@ fun getTitleTopBar(navigator: Navigator): String {
     return titleTopBar.value
 
 }
+
