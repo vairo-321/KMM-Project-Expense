@@ -46,10 +46,10 @@ kotlin {
             api(libs.precompose)
             api(libs.precompose.viewmodel)
             //api("moe.tlaster:precompose-navigation:$precompose_version")  <-- asi seria sin indice de version de libreria
+        }
 
-
-
-
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }
