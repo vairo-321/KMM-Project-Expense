@@ -17,6 +17,7 @@ junit = "4.13.2"
 kotlin = "1.9.23"
 #Desde aqui las dependencias que agrego como ViewModel, etc
 precompose = "1.6.0"
+koin = "3.5.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -32,8 +33,16 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 #Aqui agregue referencia a las librerias que necesito
+#Precompose
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 precompose-viewmodel = { module = "moe.tlaster:precompose-viewmodel", version.ref = "precompose" }
+precompose-koin = {module = "moe.tlaster:precompose-koin", version.ref = "precompose"}
+
+#Koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-compose = {module = "io.insert-koin:koin-compose"}
+koin-android = {module = "io.insert-koin:koin-android"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

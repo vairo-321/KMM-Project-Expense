@@ -31,7 +31,13 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+
+            //koin
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.android)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             // Ojo con la palabra reservada api y dependency y sus diferencias
@@ -46,6 +52,12 @@ kotlin {
             api(libs.precompose)
             api(libs.precompose.viewmodel)
             //api("moe.tlaster:precompose-navigation:$precompose_version")  <-- asi seria sin indice de version de libreria
+
+            //Koin
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            api(libs.precompose.koin)
         }
 
         commonTest.dependencies {

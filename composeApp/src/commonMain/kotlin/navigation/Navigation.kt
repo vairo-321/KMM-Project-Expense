@@ -8,6 +8,7 @@ import data.ExpenseManager
 import data.ExpenseRepositoryImpl
 import getColorsTheme
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
+import moe.tlaster.precompose.koin.koinViewModel
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.Navigator
 import moe.tlaster.precompose.navigation.path
@@ -21,10 +22,15 @@ fun Navigation(navigator: Navigator) {
 
     val colors = getColorsTheme()
 
-    val viewModel = viewModel(modelClass = ExpensesViewModel::class) {
+    //ViewModel With Koin
+    val viewModel = koinViewModel(ExpensesViewModel::class)
+
+    //ViewModel With PreCompose
+    /*val viewModel = viewModel(modelClass = ExpensesViewModel::class) {
         ExpensesViewModel(ExpenseRepositoryImpl(ExpenseManager))
     }
     //val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+     */
 
     NavHost(
         modifier = Modifier.background(colors.backgroundColor),
