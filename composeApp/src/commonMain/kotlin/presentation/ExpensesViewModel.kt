@@ -1,6 +1,5 @@
 package presentation
 
-import data.ExpenseManager.getAllExpenses
 import domain.ExpenseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,30 +21,32 @@ class ExpensesViewModel(private val repo: ExpenseRepository): ViewModel() {
 
     private val _uiState = MutableStateFlow(ExpensesUiState()) // <-- This line es de lectura y escritura, aqui se modifica los estados desde el ViewModel, aqui se modifica solo esto
     val uiState = _uiState.asStateFlow()    // <-- This line es de solo lectura, se usa para "leer" el estado del Viewmodel desde los composables (UI)
-    private val allExpenses = repo.getAllExpenses()
+    private var allExpenses : MutableList<Expense> = mutableListOf()
 
     init {
         getAllExpenses()
     }
 
-    private fun getAllExpenses() {
+    private fun updateExpenseList(){
         viewModelScope.launch {
+            allExpenses = repo.getAllExpenses().toMutableList()
             updateState()
         }
+    }
+
+    private fun getAllExpenses() {
+        repo.getAllExpenses()
+        updateExpenseList()
     }
 
     fun addExpense(expense: Expense) {
-        viewModelScope.launch {
             repo.addExpense(expense)
-            updateState()
-        }
+            updateExpenseList()
     }
 
     fun editExpense(expense: Expense) {
-        viewModelScope.launch {
             repo.editExpense(expense)
-            updateState()
-        }
+            updateExpenseList()
     }
 
     private fun updateState(){
@@ -63,14 +64,12 @@ class ExpensesViewModel(private val repo: ExpenseRepository): ViewModel() {
 
     //sin uso
     fun deleteExpense(expense: Expense) {
-        viewModelScope.launch {
             repo.deleteExpense(expense)
-            updateState()
-        }
+            updateExpenseList()
     }
 
-    fun getExpenseById(id: Long): Expense? {
-        return allExpenses.find { it.id == id }
+    fun getExpenseById(id: Long): Expense {
+        return allExpenses.first { it.id == id }
     }
 
 }

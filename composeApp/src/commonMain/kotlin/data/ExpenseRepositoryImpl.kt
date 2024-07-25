@@ -6,7 +6,6 @@ import model.Expense
 import model.ExpenseCategory
 
 class ExpenseRepositoryImpl(
-    private val expenseManager: ExpenseManager,
     private val appDatabase: AppDatabase
 ) : ExpenseRepository {
 
