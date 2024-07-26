@@ -62,7 +62,7 @@ object ExpenseManager {
             ExpenseCategory.CAR,
             ExpenseCategory.OTHER,
             ExpenseCategory.PARTY,
-            ExpenseCategory.SNACK
+            ExpenseCategory.SNACKS
         )
     }
 
