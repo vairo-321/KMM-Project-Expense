@@ -73,10 +73,10 @@ fun ExpensesDetailScreen(
 ) {
 
     val colors = getColorsTheme()
-    var price = remember { mutableStateOf(expenseToEdit?.amount ?: 0.0) }
-    var description = remember { mutableStateOf(expenseToEdit?.description ?: "") }
-    var expenseCategory = remember { mutableStateOf(expenseToEdit?.category ?: "") }
-    var categorySelected = remember { mutableStateOf(expenseToEdit?.category?.name ?: "Selected Category") }
+    var price by remember { mutableStateOf(expenseToEdit?.amount ?: 0.0) }
+    var description by remember { mutableStateOf(expenseToEdit?.description ?: "") }
+    var expenseCategory by remember { mutableStateOf(expenseToEdit?.category?.name ?: "") }
+    var categorySelected by remember { mutableStateOf(expenseToEdit?.category?.name ?: "Selected Category") }
 
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden
@@ -94,8 +94,8 @@ fun ExpensesDetailScreen(
         sheetState = sheetState,
         sheetContent = {
             CategoryBottomSheetContent(categories = categories ){
-                expenseCategory.value = it.name
-                categorySelected.value = it.name
+                expenseCategory = it.name
+                categorySelected = it.name
                 scope.launch {
                     sheetState.hide()
                 }
@@ -107,23 +107,23 @@ fun ExpensesDetailScreen(
             modifier = Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 16.dp)
         ) {
             ExpenseAmount(
-                priceContent = price.value,
+                priceContent = price,
                 onPriceChange = {
-                    price.value = it
+                    price = it
                 },
                 keyboardController = keyboardController
             )
             Spacer(modifier = Modifier.height(30.dp))
-            ExpenseTypeSelector(categorySelected = categorySelected.value, openBottomSheet = {
+            ExpenseTypeSelector(categorySelected = categorySelected, openBottomSheet = {
                 scope.launch {
                     sheetState.show()
                 }
             })
             Spacer(modifier = Modifier.height(30.dp))
             ExpenseDescription(
-                descriptionContent = description.value,
+                descriptionContent = description,
                 onDescriptionChange = {
-                    description.value = it
+                    description = it
                 },
                 keyboardController = keyboardController
             )
@@ -132,9 +132,9 @@ fun ExpensesDetailScreen(
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(45)),
                 onClick = {
                     val expense = Expense(
-                        amount = price.value,
-                        category = ExpenseCategory.valueOf(expenseCategory.value.toString()),
-                        description = description.value
+                        amount = price,
+                        category = ExpenseCategory.valueOf(expenseCategory),
+                        description = description
                     )
                     val expenseFromEdit = expenseToEdit?.id?.let { expense.copy(id = it) }
                     addExpenseAndNavigateBack(expenseFromEdit ?: expense)
@@ -143,7 +143,7 @@ fun ExpensesDetailScreen(
                     backgroundColor = colors.purple,
                     contentColor = Color.White
                 ),
-                enabled = price.value != 0.0 && description.value.isNotBlank() && expenseCategory.value.toString().isNotBlank()
+                enabled = price != 0.0 && description.isNotBlank() && expenseCategory.isNotBlank()
             ) {
                 expenseToEdit?.let {
                     Text(text = TitleTopBarTypes.EDIT.value)
