@@ -11,50 +11,63 @@ import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
 
 
-data class ExpensesUiState(
-    val expenses: List<Expense> = emptyList(),
-    val total: Double = 0.0
-)
+sealed class ExpensesUiState {
+    data class Success(val expenses: List<Expense>, val total: Double) : ExpensesUiState()
+    data class Error(val message: String) : ExpensesUiState()
+    object Loading : ExpensesUiState()
+}
 
-class ExpensesViewModel(private val repo: ExpenseRepository): ViewModel() {
+class ExpensesViewModel(private val repo: ExpenseRepository) : ViewModel() {
 
-
-    private val _uiState = MutableStateFlow(ExpensesUiState()) // <-- This line es de lectura y escritura, aqui se modifica los estados desde el ViewModel, aqui se modifica solo esto
-    val uiState = _uiState.asStateFlow()    // <-- This line es de solo lectura, se usa para "leer" el estado del Viewmodel desde los composables (UI)
-    private var allExpenses : MutableList<Expense> = mutableListOf()
+    private val _uiState =
+        MutableStateFlow<ExpensesUiState>(ExpensesUiState.Loading) // <-- This line es de lectura y escritura, aqui se modifica los estados desde el ViewModel, aqui se modifica solo esto
+    val uiState =
+        _uiState.asStateFlow()    // <-- This line es de solo lectura, se usa para "leer" el estado del Viewmodel desde los composables (UI)
+    private var allExpenses: MutableList<Expense> = mutableListOf()
 
     init {
-        getAllExpenses()
+        getExpenseList()
     }
 
-    private fun updateExpenseList(){
+    private fun getExpenseList() {
         viewModelScope.launch {
-            allExpenses = repo.getAllExpenses().toMutableList()
-            updateState()
+            try {
+                val expenses = repo.getAllExpenses()
+                _uiState.value = ExpensesUiState.Success(expenses, expenses.sumOf { it.amount })
+            } catch (error: Exception) {
+                _uiState.value = ExpensesUiState.Error(error.message ?: "Error desconocido")
+            }
         }
     }
 
-    private fun getAllExpenses() {
-        repo.getAllExpenses()
-        updateExpenseList()
+    private suspend fun updateExpenseList() {
+        try {
+            val expenses = repo.getAllExpenses()
+            _uiState.value = ExpensesUiState.Success(expenses, expenses.sumOf { it.amount })
+        } catch (error: Exception) {
+            _uiState.value = ExpensesUiState.Error(error.message ?: "Error desconocido")
+        }
     }
 
     fun addExpense(expense: Expense) {
-            repo.addExpense(expense)
-            updateExpenseList()
+        viewModelScope.launch {
+            try {
+                repo.addExpense(expense)
+                updateExpenseList()
+            } catch (error: Exception) {
+                _uiState.value = ExpensesUiState.Error(error.message ?: "Error desconocido")
+            }
+        }
     }
 
     fun editExpense(expense: Expense) {
-            repo.editExpense(expense)
-            updateExpenseList()
-    }
-
-    private fun updateState(){
-        _uiState.update { state ->
-            state.copy(
-                expenses = allExpenses,
-                total = allExpenses.sumOf { it.amount }
-            )
+        viewModelScope.launch {
+            try {
+                repo.editExpense(expense)
+                updateExpenseList()
+            } catch (error: Exception) {
+                _uiState.value = ExpensesUiState.Error(error.message ?: "Error desconocido")
+            }
         }
     }
 
@@ -64,12 +77,17 @@ class ExpensesViewModel(private val repo: ExpenseRepository): ViewModel() {
 
     //sin uso
     fun deleteExpense(expense: Expense) {
-            repo.deleteExpense(expense)
-            updateExpenseList()
+        viewModelScope.launch {
+            try {
+                repo.deleteExpense(expense)
+                updateExpenseList()
+            } catch (error: Exception) {
+                _uiState.value = ExpensesUiState.Error(error.message ?: "Error desconocido")
+            }
+        }
     }
 
-    fun getExpenseById(id: Long): Expense {
-        return allExpenses.first { it.id == id }
+    fun getExpenseById(id: Long): Expense? {
+        return (_uiState.value as? ExpensesUiState.Success)?.expenses?.firstOrNull { it.id == id }
     }
-
 }

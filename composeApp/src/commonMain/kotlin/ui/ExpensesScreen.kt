@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -42,18 +43,38 @@ fun ExpensesScreen(uiState: ExpensesUiState, onExpenseClick: (expense: Expense) 
 
     val colors = getColorsTheme()
 
-    LazyColumn(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        stickyHeader {
-            Column(modifier = Modifier.background(colors.backgroundColor)) {
-                ExpenseTotalHeader(uiState.total)
-                AllExpensesHeader()
+    when(uiState){
+        is ExpensesUiState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                CircularProgressIndicator()
             }
         }
-        items(uiState.expenses) { expense ->
-            ExpensesItem(expense = expense, onExpenseClick = onExpenseClick)
+        is ExpensesUiState.Success -> {
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                stickyHeader {
+                    Column(modifier = Modifier.background(colors.backgroundColor)) {
+                        ExpenseTotalHeader(uiState.total)
+                        AllExpensesHeader()
+                    }
+                }
+                items(uiState.expenses) { expense ->
+                    ExpensesItem(expense = expense, onExpenseClick = onExpenseClick)
+                }
+            }
+        }
+        is ExpensesUiState.Error -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Text(text = "Error: ${uiState.message}")
+            }
         }
     }
 }

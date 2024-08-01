@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqlDelight)
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 //SqlDelight config
@@ -49,6 +50,10 @@ kotlin {
 
             //sqlDelight
             implementation(libs.sqlDelight.android)
+
+            //Ktor-Client
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
         }
 
         commonMain.dependencies {
@@ -71,6 +76,12 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             api(libs.precompose.koin)
+
+            //Ktor-Client
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.content.negotiation)
+            implementation(libs.ktor.serialization)
         }
 
         iosMain.dependencies {
@@ -78,6 +89,8 @@ kotlin {
             implementation(libs.sqlDelight.ios)
             implementation(libs.stately.common)
 
+            //Ktor-Client
+            implementation(libs.ktor.client.darwin)
         }
 
         commonTest.dependencies {
