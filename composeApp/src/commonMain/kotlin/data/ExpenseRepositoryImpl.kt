@@ -35,6 +35,13 @@ class ExpenseRepositoryImpl(
                     description = it.description
                 )
             }
+            expenses.forEach {
+                queries.insert(
+                    amount = it.amount,
+                    category = it.category.name,
+                    description = it.description
+                )
+            }
             expenses
         } else {
             queries.selectAll().executeAsList().map {
