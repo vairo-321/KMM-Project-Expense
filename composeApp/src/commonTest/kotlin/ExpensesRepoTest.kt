@@ -2,7 +2,6 @@ import data.ExpenseManager
 import data.ExpenseRepositoryImpl
 import model.Expense
 import model.ExpenseCategory
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertFalse

@@ -2,6 +2,7 @@ package domain
 
 import model.Expense
 import model.ExpenseCategory
+import org.koin.core.scope.ScopeID
 
 interface ExpenseRepository {
 
@@ -9,6 +10,6 @@ interface ExpenseRepository {
     suspend fun addExpense(expense: Expense)
     suspend fun editExpense(expense: Expense)
     fun getCategories(): List<ExpenseCategory>
-    suspend fun deleteExpense(expense: Expense)
+    suspend fun deleteExpense(id: Long)
 
 }

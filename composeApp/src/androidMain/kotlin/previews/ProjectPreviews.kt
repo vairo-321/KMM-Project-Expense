@@ -41,7 +41,7 @@ fun ExpenseScreenPreview() {
     ExpensesScreen(uiState = ExpensesUiState.Success(
         expenses = ExpenseManager.fakeExpenseList,
         total = ExpenseManager.fakeExpenseList.sumOf { it.amount },
-    ), onExpenseClick = { })
+    ), onExpenseClick = { }, onDeleteExpense = { })
 }
 
 @Preview(showBackground = true)

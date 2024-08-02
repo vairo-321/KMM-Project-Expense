@@ -3,7 +3,6 @@ package presentation
 import domain.ExpenseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.Expense
 import model.ExpenseCategory
@@ -76,10 +75,10 @@ class ExpensesViewModel(private val repo: ExpenseRepository) : ViewModel() {
     }
 
     //sin uso
-    fun deleteExpense(expense: Expense) {
+    fun deleteExpense(id: Long) {
         viewModelScope.launch {
             try {
-                repo.deleteExpense(expense)
+                repo.deleteExpense(id)
                 updateExpenseList()
             } catch (error: Exception) {
                 _uiState.value = ExpensesUiState.Error(error.message ?: "Error desconocido")

@@ -33,24 +33,31 @@ fun Navigation(navigator: Navigator) {
         modifier = Modifier.background(colors.backgroundColor),
         navigator = navigator,
         initialRoute = "/home"
-    ){
-        scene("/home"){
+    ) {
+        scene("/home") {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            ExpensesScreen(uiState){ expense ->
-                navigator.navigate("/addExpenses/${expense.id}")
-            }
+            ExpensesScreen(
+                uiState = uiState,
+                onExpenseClick = { expense ->
+                    navigator.navigate("/addExpenses/${expense.id}")
+                },
+                onDeleteExpense = { expenseToDelete ->
+                    viewModel.deleteExpense(expenseToDelete.id)
+                })
         }
 
-        scene(route = "/addExpenses/{id}?"){ backStackEntry ->
+        scene(route = "/addExpenses/{id}?") { backStackEntry ->
             val id = backStackEntry.path<Long>("id")
-            val expenseToEditOrAdd = id?.let {  viewModel.getExpenseById(id) }
+            val expenseToEditOrAdd = id?.let { viewModel.getExpenseById(id) }
 
-            ExpensesDetailScreen(expenseToEdit = expenseToEditOrAdd, categories = viewModel.getCategories()){ expense ->
+            ExpensesDetailScreen(
+                expenseToEdit = expenseToEditOrAdd,
+                categories = viewModel.getCategories()
+            ) { expense ->
 
                 if (expenseToEditOrAdd == null) {
                     viewModel.addExpense(expense)
-                }
-                else {
+                } else {
                     viewModel.editExpense(expense)
                 }
                 navigator.popBackStack()
