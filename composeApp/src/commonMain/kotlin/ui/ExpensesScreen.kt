@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +38,13 @@ import androidx.compose.ui.unit.sp
 import getColorsTheme
 import model.Expense
 import presentation.ExpensesUiState
+import utils.EXPENSE_SCREEN_ERROR_TEST_TAG
+import utils.EXPENSE_SCREEN_ERROR_TEXT_TEST_TAG
+import utils.EXPENSE_SCREEN_LOADING_TEST_TAG
+import utils.EXPENSE_SCREEN_SUCCESS_CLICK_ITEM_TEST_TAG
+import utils.EXPENSE_SCREEN_SUCCESS_EMPTY_TEST_TAG
+import utils.EXPENSE_SCREEN_SUCCESS_TEST_TAG
+import utils.EXPENSE_SCREEN_SUCCESS_TOTAL_TEST_TAG
 import utils.SwipeToDeleteContainer
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -50,19 +57,21 @@ fun ExpensesScreen(
 
     val colors = getColorsTheme()
 
-    when(uiState){
+    when (uiState) {
         is ExpensesUiState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().testTag(EXPENSE_SCREEN_LOADING_TEST_TAG),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 CircularProgressIndicator()
             }
         }
+
         is ExpensesUiState.Success -> {
-            if(uiState.expenses.isEmpty()) {
+            if (uiState.expenses.isEmpty()) {
                 Box(
-                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)
+                        .testTag(EXPENSE_SCREEN_SUCCESS_EMPTY_TEST_TAG),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -74,7 +83,9 @@ fun ExpensesScreen(
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp).testTag(
+                        EXPENSE_SCREEN_SUCCESS_TEST_TAG
+                    ),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     stickyHeader {
@@ -94,12 +105,17 @@ fun ExpensesScreen(
                 }
             }
         }
+
         is ExpensesUiState.Error -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().testTag(EXPENSE_SCREEN_ERROR_TEST_TAG),
                 contentAlignment = Alignment.Center
-            ){
-                Text(text = "Error: ${uiState.message}")
+            ) {
+                Text(
+                    modifier = Modifier.testTag(EXPENSE_SCREEN_ERROR_TEXT_TEST_TAG),
+                    text = "Error: ${uiState.message}",
+                    style = MaterialTheme.typography.body1
+                )
             }
         }
     }
@@ -112,12 +128,13 @@ fun ExpenseTotalHeader(total: Double) {
         shape = RoundedCornerShape(30),
         backgroundColor = Color.Black,
         elevation = 5.dp
-    ){
+    ) {
         Box(
             modifier = Modifier.fillMaxWidth().height(130.dp).padding(16.dp),
             contentAlignment = Alignment.CenterStart
-        ){
+        ) {
             Text(
+                modifier = Modifier.testTag(EXPENSE_SCREEN_SUCCESS_TOTAL_TEST_TAG),
                 text = "$$total",
                 color = Color.White,
                 fontSize = 30.sp,
@@ -166,7 +183,7 @@ fun AllExpensesHeader() {
 
 
 @Composable
-fun ExpensesItem(expense: Expense, onExpenseClick: (expense: Expense) -> Unit){
+fun ExpensesItem(expense: Expense, onExpenseClick: (expense: Expense) -> Unit) {
 
     val colors = getColorsTheme()
 
@@ -174,21 +191,21 @@ fun ExpensesItem(expense: Expense, onExpenseClick: (expense: Expense) -> Unit){
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 2.dp).clickable {
             onExpenseClick(expense)
-        },
+        }.testTag(EXPENSE_SCREEN_SUCCESS_CLICK_ITEM_TEST_TAG.plus("_${expense.id}")),
         shape = RoundedCornerShape(30),
         backgroundColor = colors.colorExpenseItem,
-    ){
+    ) {
         //Fila de cada detalle de expensa item, cada una de esta fila ira en la List<Row>
         Row(
-            modifier = Modifier.padding(horizontal = 8.dp ,vertical = 16.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             //Icon
             Surface(
                 modifier = Modifier.size(50.dp),
                 shape = RoundedCornerShape(35),
                 color = colors.purple
-            ){
+            ) {
                 Image(
                     modifier = Modifier.padding(10.dp),
                     imageVector = expense.icon,
@@ -201,7 +218,7 @@ fun ExpensesItem(expense: Expense, onExpenseClick: (expense: Expense) -> Unit){
             //Column middle part, description and amount
             Column(
                 modifier = Modifier.weight(1f).padding(start = 8.dp)
-            ){
+            ) {
                 Text(
                     text = expense.category.name,
                     color = colors.textColor,

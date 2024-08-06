@@ -62,6 +62,7 @@ import getColorsTheme
 import kotlinx.coroutines.launch
 import model.Expense
 import model.ExpenseCategory
+import utils.EXPENSE_DETAIL_TEST_TAG
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -104,7 +105,8 @@ fun ExpensesDetailScreen(
     )
     {
         Column(
-            modifier = Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 16.dp)
+            modifier = Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 16.dp).
+            testTag(EXPENSE_DETAIL_TEST_TAG)
         ) {
             ExpenseAmount(
                 priceContent = price,
