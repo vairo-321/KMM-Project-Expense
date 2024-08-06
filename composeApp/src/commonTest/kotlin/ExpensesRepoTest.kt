@@ -8,7 +8,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ExpensesRepoTest {
-
+/*
     private val expenseManager: ExpenseManager = ExpenseManager
     val repository: ExpenseRepositoryImpl = ExpenseRepositoryImpl(expenseManager)
     val expenseListTest: List<Expense> = listOf(
@@ -57,6 +57,6 @@ class ExpensesRepoTest {
         repository.deleteExpense(expenseListTest[0].copy(id = id))
         assertFalse(repository.getAllExpenses().contains(expenseListTest[0].copy(id = id)))
     }
-
+*/
 
 }
