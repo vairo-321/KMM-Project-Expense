@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.CrossConfigDevice
+import data.SessionCache
 import data.TitleTopBarTypes
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.Navigator
@@ -24,14 +26,14 @@ import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.rememberNavigator
 import navigation.Navigation
 import org.koin.compose.KoinContext
-import org.koin.core.context.KoinContext
 
 
 @Composable
-fun App() {
+fun App(configDevice: CrossConfigDevice? = null) {
     PreComposeApp {
         KoinContext {
             val colors = getColorsTheme()
+            SessionCache.configDevice = configDevice
 
             AppTheme {
 
